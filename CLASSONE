@@ -177,48 +177,53 @@
         }
 
         function renderTable(type, statuses) {
-            const data = masterData.filter(d => d.person_type === type);
-            const container = document.getElementById(type + '-list');
-            container.innerHTML = `
-                <table class="w-full text-left">
-                    <thead class="bg-slate-50 text-slate-400 text-xs font-bold uppercase">
-                        <tr>
-                            <th class="p-4">Lead Date</th>
-                            <th class="p-4">Contact</th>
-                            <th class="p-4">Status & Deadline</th>
-                            <th class="p-4">Remarks</th>
-                            <th class="p-4 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        ${data.map(item => `
-                            <tr class="hover:bg-slate-50">
-                                <td class="p-4 text-xs font-mono text-slate-400">${item.created_at.split('T')[0]}</td>
-                                <td class="p-4">
-                                    <div class="font-bold text-slate-700">${item.name}</div>
-                                    <div class="text-xs text-slate-400">${item.phone}</div>
-                                </td>
-                                <td class="p-4">
-                                    <div class="flex items-center">
-                                        <select onchange="updateStatus('${item.id}', this.value)" class="border rounded p-1 text-sm bg-white outline-none">
-                                            ${statuses.map(s => `<option value="${s}" ${item.status === s ? 'selected' : ''}>${s}</option>`).join('')}
-                                        </select>
-                                        ${calculateDueStatus(item.created_at, item.status, type)}
-                                    </div>
-                                </td>
-                                <td class="p-4">
-                                    <input type="text" 
-                                           placeholder="Add note..." 
-                                           value="${item.remarks || ''}" 
-                                           onblur="updateRemark('${item.id}', this.value)"
-                                           class="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none p-1 text-sm">
-                                </td>
-                                <td class="p-4 text-right"><button onclick="deleteItem('${item.id}')" class="text-slate-300 hover:text-red-500 text-xl">×</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>`;
-        }
+    const data = masterData.filter(d => d.person_type === type);
+    const container = document.getElementById(type + '-list');
+    container.innerHTML = `
+        <table class="w-full text-left">
+            <thead class="bg-slate-50 text-slate-400 text-xs font-bold uppercase">
+                <tr>
+                    <th class="p-4">Lead Date</th>
+                    <th class="p-4">Contact</th>
+                    <th class="p-4">Status & Deadline</th>
+                    <th class="p-4">Remarks</th>
+                    <th class="p-4 text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                ${data.map(item => {
+                    // --- STEP 1: ADD THIS LOGIC ---
+                    const isStudentEnrolled = type === 'student' && item.status === 'enrollment';
+                    const isTeacherOnboarded = type === 'teacher' && item.status === 'onboard';
+                    const bgColor = (isStudentEnrolled || isTeacherOnboarded) ? 'bg-green-100' : 'hover:bg-slate-50';
+                    
+                    return `
+                    <tr class="${bgColor} transition-colors"> <td class="p-4 text-xs font-mono text-slate-400">${item.created_at.split('T')[0]}</td>
+                        <td class="p-4">
+                            <div class="font-bold text-slate-700">${item.name}</div>
+                            <div class="text-xs text-slate-400">${item.phone}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex items-center">
+                                <select onchange="updateStatus('${item.id}', this.value)" class="border rounded p-1 text-sm bg-white outline-none">
+                                    ${statuses.map(s => `<option value="${s}" ${item.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                                </select>
+                                ${calculateDueStatus(item.created_at, item.status, type)}
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <input type="text" 
+                                   placeholder="Add note..." 
+                                   value="${item.remarks || ''}" 
+                                   onblur="updateRemark('${item.id}', this.value)"
+                                   class="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none p-1 text-sm">
+                        </td>
+                        <td class="p-4 text-right"><button onclick="deleteItem('${item.id}')" class="text-slate-300 hover:text-red-500 text-xl">×</button></td>
+                    </tr>
+                `}).join('')}
+            </tbody>
+        </table>`;
+}
 
         async function deleteItem(id) {
             if(confirm("Delete permanently?")) {
