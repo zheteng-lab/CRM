@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Live CRM</title>
+    <title>Student Enrollment CRM</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 p-4 md:p-10 font-sans">
 
-    <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
-        <div class="bg-slate-800 p-6 text-white">
-            <h1 class="text-2xl font-bold">Team Lead Manager</h1>
-            <p class="text-slate-400 text-sm">Cloud-synced Database</p>
+    <div class="max-w-6xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
+        <div class="bg-indigo-800 p-6 text-white">
+            <h1 class="text-2xl font-bold">Student Lead Manager</h1>
+            <p class="text-indigo-300 text-sm">Real-time Enrollment Tracking</p>
         </div>
 
         <div class="p-6 border-b border-slate-100 bg-slate-50">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                <input id="name" type="text" placeholder="Lead Name" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                <input id="company" type="text" placeholder="Company" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                <input id="value" type="number" placeholder="Value ($)" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                <button onclick="addLead()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
-                    + Add Lead
+                <input id="name" type="text" placeholder="Student Name" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                <input id="phone" type="text" placeholder="Phone Number" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                <input id="company" type="text" placeholder="Note/School" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                <button onclick="addLead()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    + Add Student
                 </button>
             </div>
         </div>
@@ -30,112 +30,84 @@
             <table class="w-full text-left">
                 <thead class="bg-slate-100 text-slate-600 text-sm uppercase">
                     <tr>
-                        <th class="p-4">Lead Info</th>
-                        <th class="p-4">Value</th>
-                        <th class="p-4">Status (Click to Change)</th>
+                        <th class="p-4">Student Info</th>
+                        <th class="p-4">Phone</th>
+                        <th class="p-4">Enrollment Status</th>
                         <th class="p-4 text-right">Action</th>
                     </tr>
                 </thead>
-                <tbody id="leads-table-body" class="divide-y divide-slate-100">
-                    </tbody>
+                <tbody id="leads-table-body" class="divide-y divide-slate-100"></tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
         const SUPABASE_URL = 'https://sizkhdpfhfpcflyxwfnq.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Oi7djoe5vli1NuoC4xHubw_k0BCv-aA';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // --- FUNCTIONS ---
-
-        // 1. Fetch data from Cloud
         async function fetchLeads() {
             const { data, error } = await supabaseClient
                 .from('leads')
                 .select('*')
                 .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error("Error:", error);
-                return;
-            }
-            renderLeads(data);
+            if (!error) renderLeads(data);
         }
 
-        // 2. Add New Lead
         async function addLead() {
             const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
             const company = document.getElementById('company').value;
-            const value = document.getElementById('value').value;
 
-            if (!name) return alert("Please enter a name");
+            if (!name) return alert("Student Name is required");
 
             const { error } = await supabaseClient
                 .from('leads')
-                .insert([{ name, company, value: value || 0, status: 'New' }]);
+                .insert([{ name, phone, company, status: 'New' }]);
 
             if (error) alert("Sync Error!");
             else {
                 document.getElementById('name').value = '';
+                document.getElementById('phone').value = '';
                 document.getElementById('company').value = '';
-                document.getElementById('value').value = '';
                 fetchLeads();
             }
         }
 
-        // 3. Update Status (The "Edit" part)
         async function updateStatus(id, newStatus) {
-            const { error } = await supabaseClient
-                .from('leads')
-                .update({ status: newStatus })
-                .eq('id', id);
-            
-            if (error) alert("Update failed");
-            else fetchLeads();
+            const { error } = await supabaseClient.from('leads').update({ status: newStatus }).eq('id', id);
+            if (!error) fetchLeads();
         }
 
-        // 4. Delete Lead
         async function deleteLead(id) {
-            if (!confirm("Are you sure?")) return;
-            const { error } = await supabaseClient.from('leads').delete().eq('id', id);
-            if (error) alert("Delete failed");
-            else fetchLeads();
+            if (confirm("Remove this student?")) {
+                await supabaseClient.from('leads').delete().eq('id', id);
+                fetchLeads();
+            }
         }
 
-        // 5. Build the Table UI
         function renderLeads(leads) {
             const body = document.getElementById('leads-table-body');
-            if (leads.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-slate-400">No leads found. Start by adding one above!</td></tr>`;
-                return;
-            }
-
+            const statuses = ["New", "Follow Up", "Rejected", "Transfer", "Assessment", "Voucher", "Enroll", "On hold", "No respond"];
+            
             body.innerHTML = leads.map(lead => `
                 <tr class="hover:bg-slate-50 transition">
                     <td class="p-4">
                         <div class="font-bold text-slate-800">${lead.name}</div>
-                        <div class="text-xs text-slate-500">${lead.company || 'No Company'}</div>
+                        <div class="text-xs text-slate-500">${lead.company || ''}</div>
                     </td>
-                    <td class="p-4 text-slate-700 font-mono">$${lead.value}</td>
+                    <td class="p-4 text-slate-700">${lead.phone || '-'}</td>
                     <td class="p-4">
-                        <select onchange="updateStatus('${lead.id}', this.value)" class="bg-white border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500">
-                            <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
-                            <option value="Contacted" ${lead.status === 'Contacted' ? 'selected' : ''}>Contacted</option>
-                            <option value="Negotiation" ${lead.status === 'Negotiation' ? 'selected' : ''}>Negotiation</option>
-                            <option value="Closed" ${lead.status === 'Closed' ? 'selected' : ''}>Closed</option>
-                            <option value="Lost" ${lead.status === 'Lost' ? 'selected' : ''}>Lost</option>
+                        <select onchange="updateStatus('${lead.id}', this.value)" class="bg-white border rounded px-2 py-1 text-sm">
+                            ${statuses.map(s => `<option value="${s}" ${lead.status === s ? 'selected' : ''}>${s}</option>`).join('')}
                         </select>
                     </td>
                     <td class="p-4 text-right">
-                        <button onclick="deleteLead('${lead.id}')" class="text-red-400 hover:text-red-600 text-sm">Remove</button>
+                        <button onclick="deleteLead('${lead.id}')" class="text-red-400 hover:text-red-600 text-sm">Delete</button>
                     </td>
                 </tr>
             `).join('');
         }
-
-        // Initial Load
         fetchLeads();
     </script>
 </body>
