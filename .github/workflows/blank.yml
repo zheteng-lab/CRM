@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy CRM + Activity Logs</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900">
+
+    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="font-black text-xl text-indigo-400">ACADEMY CRM</h1>
+            <div class="flex gap-2 text-sm">
+                <button onclick="showPage('stats')" class="px-3 py-2 rounded hover:bg-indigo-600">📊 Stats</button>
+                <button onclick="showPage('students')" class="px-3 py-2 rounded hover:bg-indigo-600">🎓 Students</button>
+                <button onclick="showPage('teachers')" class="px-3 py-2 rounded hover:bg-indigo-600">👨‍🏫 Teachers</button>
+                <button onclick="showPage('export')" class="px-3 py-2 rounded hover:bg-red-700">📄 PDF</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="log-modal" class="fixed inset-0 bg-black/50 hidden z-[60] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-lg">Activity History</h3>
+                <button onclick="closeLogs()" class="text-slate-400 hover:text-red-500 text-2xl">&times;</button>
+            </div>
+            <div id="log-content" class="p-6 max-h-[400px] overflow-y-auto space-y-4">
+                </div>
+            <div class="p-4 bg-slate-50 border-t flex gap-2">
+                <input id="new-log-entry" type="text" placeholder="Add a note..." class="flex-1 p-2 border rounded-lg text-sm">
+                <button onclick="submitManualLog()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm">Post</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <div id="page-stats" class="page-content">...</div>
+        
+        <div id="page-students" class="page-content hidden">
+            <div class="bg-indigo-600 p-6 rounded-2xl mb-8 text-white flex gap-4">
+                <input id="s-name" type="text" placeholder="Student Name" class="flex-1 p-2 rounded text-slate-900">
+                <input id="s-phone" type="text" placeholder="Phone" class="w-40 p-2 rounded text-slate-900">
+                <button onclick="addItem('student')" class="bg-white text-indigo-600 font-bold px-6 py-2 rounded">Add</button>
+            </div>
+            <div id="student-list" class="bg-white rounded-2xl shadow-sm border overflow-hidden"></div>
+        </div>
+
+        <div id="page-teachers" class="page-content hidden">
+            <div class="bg-emerald-600 p-6 rounded-2xl mb-8 text-white flex gap-4">
+                <input id="t-phone" type="text" placeholder="Teacher Phone Number" class="flex-1 p-2 rounded text-slate-900">
+                <button onclick="addItem('teacher')" class="bg-white text-emerald-600 font-bold px-6 py-2 rounded">Add</button>
+            </div>
+            <div id="teacher-list" class="bg-white rounded-2xl shadow-sm border overflow-hidden"></div>
+        </div>
+
+        <div id="page-export" class="page-content hidden">...</div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://sizkhdpfhfpcflyxwfnq.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Oi7djoe5vli1NuoC4xHubw_k0BCv-aA';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const STUDENT_STATUSES = ["New", "Follow Up Parents", "No Respond", "Arrange Voucher", "Rejected", "Enrollment"];
+        const TEACHER_STATUSES = ["New", "Follow Up Teacher", "No Respond", "Pending Payment", "Paid Fees", "Rejected", "Onboard"];
+        
+        let activeLeadId = null;
+
+        // --- CORE FUNCTIONS ---
+        async function fetchData() {
+            const { data } = await supabaseClient.from('leads').select('*').order('created_at', { ascending: false });
+            renderTable('student', data.filter(d => d.person_type === 'student'), STUDENT_STATUSES);
+            renderTable('teacher', data.filter(d => d.person_type === 'teacher'), TEACHER_STATUSES);
+        }
+
+        async function addItem(type) {
+            const name = type === 'student' ? document.getElementById('s-name').value : 'Teacher Lead';
+            const phone = document.getElementById(type === 'student' ? 's-phone' : 't-phone').value;
+            const { data, error } = await supabaseClient.from('leads').insert([{ name, phone, person_type: type, status: 'New' }]).select();
+            if (data) addLog(data[0].id, `Lead created: ${type}`);
+            fetchData();
+        }
+
+        async function updateStatus(id, newStatus) {
+            await supabaseClient.from('leads').update({ status: newStatus }).eq('id', id);
+            addLog(id, `Status updated to: ${newStatus}`);
+            fetchData();
+        }
+
+        // --- LOGGING LOGIC ---
+        async function addLog(leadId, entry) {
+            await supabaseClient.from('logs').insert([{ lead_id: leadId, entry: entry }]);
+        }
+
+        async function viewLogs(id) {
+            activeLeadId = id;
+            document.getElementById('log-modal').classList.remove('hidden');
+            const { data } = await supabaseClient.from('logs').select('*').eq('lead_id', id).order('created_at', { ascending: false });
+            
+            document.getElementById('log-content').innerHTML = data.map(l => `
+                <div class="border-l-2 border-indigo-200 pl-4 py-1">
+                    <div class="text-[10px] text-slate-400 font-mono">${new Date(l.created_at).toLocaleString()}</div>
+                    <div class="text-sm text-slate-700">${l.entry}</div>
+                </div>
+            `).join('') || '<p class="text-slate-400 text-center py-4">No history yet.</p>';
+        }
+
+        function closeLogs() { document.getElementById('log-modal').classList.add('hidden'); }
+
+        async function submitManualLog() {
+            const entry = document.getElementById('new-log-entry').value;
+            if(!entry || !activeLeadId) return;
+            await addLog(activeLeadId, entry);
+            document.getElementById('new-log-entry').value = '';
+            viewLogs(activeLeadId);
+        }
+
+        function renderTable(type, data, statuses) {
+            const container = document.getElementById(type + '-list');
+            container.innerHTML = `
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-slate-400 text-xs font-bold uppercase">
+                        <tr><th class="p-4">Contact</th><th class="p-4">Status</th><th class="p-4">History</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        ${data.map(item => `
+                            <tr>
+                                <td class="p-4"><div class="font-bold">${item.name}</div><div class="text-xs">${item.phone}</div></td>
+                                <td class="p-4">
+                                    <select onchange="updateStatus('${item.id}', this.value)" class="border rounded p-1 text-sm">
+                                        ${statuses.map(s => `<option value="${s}" ${item.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                                    </select>
+                                </td>
+                                <td class="p-4">
+                                    <button onclick="viewLogs('${item.id}')" class="text-indigo-600 text-xs font-bold bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">
+                                        View History
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+            fetchData();
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
