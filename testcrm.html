@@ -185,6 +185,7 @@
                 <tr>
                     <th class="p-4">Lead Date</th>
                     <th class="p-4">Contact</th>
+                    <th class="p-4">Name</th>
                     <th class="p-4">Status & Deadline</th>
                     <th class="p-4">Remarks</th>
                     <th class="p-4 text-right">Action</th>
@@ -200,8 +201,10 @@
                     return `
                     <tr class="${bgColor} transition-colors"> <td class="p-4 text-xs font-mono text-slate-400">${item.created_at.split('T')[0]}</td>
                         <td class="p-4">
-                            <div class="font-bold text-slate-700">${item.name}</div>
                             <div class="text-xs text-slate-400">${item.phone}</div>
+                        </td>
+                        <td class="p-4">
+                            <input type="text" 
                         </td>
                         <td class="p-4">
                             <div class="flex items-center">
@@ -245,7 +248,7 @@
             });
 
             doc.setFontSize(18);
-            doc.text("ACADEMY CRM REPORT", 14, 20);
+            doc.text("Class One CRM REPORT", 14, 20);
             doc.setFontSize(10);
             doc.text(`Period: ${start} to ${end}`, 14, 28);
 
