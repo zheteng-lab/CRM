@@ -6,17 +6,17 @@
     <title>Class One | Teacher-Creator Side Income Program</title>
     <style>
         :root {
-            --bg-main: #f8fafc;
-            --bg-card: #ffffff;
-            --primary: #1e3a8a;
-            --primary-gradient: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-            --accent: #3b82f6;
-            --accent-light: #eff6ff;
-            --accent-amber: #f59e0b;
-            --accent-green: #10b981;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
+            --bg-main: #fdfaf6; /* Warm creamy vanilla background */
+            --bg-card: #ffffff; /* Crisp clean white for cards */
+            --primary: #4a3e3d; /* Soft cocoa brown instead of harsh dark blue */
+            --primary-gradient: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 40%, #e8dbfc 100%); /* Strawberry & lavender milk milkshake */
+            --accent: #ff8fab; /* Soft warm pink */
+            --accent-light: #fff0f3; /* Light strawberry blush blush */
+            --accent-amber: #ffd166; /* Honey yellow */
+            --accent-green: #a7c957; /* Sweet matcha green */
+            --text-dark: #4a3e3d; /* Warm dark brown text */
+            --text-muted: #8d7a79; /* Warm taupe text */
+            --border: #f7ebe1; /* Soft cookie-crumb border */
         }
 
         body {
@@ -34,64 +34,102 @@
             padding: 0 20px;
         }
 
-        /* Hero Banner Section */
+        /* Logo Card Style */
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 8px 16px rgba(141, 122, 121, 0.04);
+        }
+
+        .logo-wrapper img {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Cute Hero Banner Section */
         .hero-banner {
             background: var(--primary-gradient);
-            color: #ffffff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+            color: var(--primary);
+            padding: 45px 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(255, 143, 171, 0.15);
             margin-bottom: 40px;
+            text-align: center;
+            border: 2px solid #fff;
         }
 
         .hero-banner h1 {
-            margin: 0 0 10px 0;
-            font-size: 2.2rem;
+            margin: 0 0 12px 0;
+            font-size: 2.3rem;
             font-weight: 800;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.02em;
+            color: #382c2b;
         }
 
         .hero-banner p {
             margin: 0;
-            font-size: 1.1rem;
-            color: #93c5fd;
-            font-weight: 300;
+            font-size: 1.15rem;
+            color: #6d5958;
+            font-weight: 500;
         }
 
         .section-title {
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             font-weight: 700;
             color: var(--primary);
             margin: 40px 0 20px 0;
-            padding-left: 12px;
-            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+            border-left: 6px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Pillars Matrix Grid Layout */
         .grid-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 24px;
             margin-bottom: 30px;
+            align-items: stretch;
         }
 
         .card {
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 16px rgba(141, 122, 121, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 320px;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(255, 143, 171, 0.1);
         }
 
         .card-header-flex {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 12px;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 10px;
         }
 
         .card-title {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--primary);
             margin: 0;
@@ -99,8 +137,37 @@
 
         .card-meta {
             font-size: 0.9rem;
+            color: #ff5c8a;
+            font-weight: 700;
+            background: var(--accent-light);
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        /* Teacher-friendly list formatting */
+        .card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .card li {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .card li::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
             color: var(--accent);
-            font-weight: 600;
+            font-weight: bold;
+        }
+
+        .card strong {
+            color: #2c2524;
         }
 
         /* Dynamic Matrix Table Styling */
@@ -108,9 +175,9 @@
             width: 100%;
             overflow-x: auto;
             background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            box-shadow: 0 8px 16px rgba(141, 122, 121, 0.04);
             margin-bottom: 25px;
         }
 
@@ -121,11 +188,11 @@
         }
 
         th {
-            background-color: var(--primary);
-            color: #ffffff;
-            font-weight: 600;
+            background-color: #ffccd5; /* Soft pastel pink headers */
+            color: var(--primary);
+            font-weight: 700;
             padding: 16px 20px;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         td {
@@ -141,43 +208,44 @@
 
         .badge {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 5px 12px;
+            border-radius: 30px;
             font-size: 0.85rem;
-            font-weight: 600;
-            margin: 2px 0;
+            font-weight: 700;
+            margin: 3px 0;
         }
-        .badge-edited { background-color: #d1fae5; color: #065f46; }
-        .badge-raw { background-color: #fef3c7; color: #92400e; }
-        .badge-disabled { background-color: #f1f5f9; color: #94a3b8; text-decoration: line-through; }
+        .badge-edited { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .badge-raw { background-color: #fff9db; color: #f59f00; border: 1px solid #ffe3e3; }
+        .badge-disabled { background-color: #f1f3f5; color: #868e96; text-decoration: line-through; border: 1px solid #e9ecef; }
 
-        /* Dynamic Safeguard Callout Box */
+        /* Cozy Safeguard Callout Box */
         .safeguard-callout {
-            background-color: #fffbeb;
-            border-left: 5px solid var(--accent-amber);
-            border-radius: 4px 12px 12px 4px;
-            padding: 20px;
+            background-color: #fff9db; /* Soft warm honey */
+            border-left: 6px solid #fcc419;
+            border-radius: 8px 24px 24px 8px;
+            padding: 24px;
             margin: 30px 0;
+            box-shadow: 0 6px 12px rgba(252, 196, 25, 0.05);
         }
 
         .safeguard-callout h4 {
             margin: 0 0 8px 0;
-            color: #92400e;
-            font-size: 1.1rem;
+            color: #f76707;
+            font-size: 1.15rem;
             font-weight: 700;
         }
 
         .safeguard-callout p {
             margin: 0;
-            font-size: 0.95rem;
-            color: #78350f;
+            font-size: 0.98rem;
+            color: #d9480f;
         }
 
         /* Criteria Split View Layout */
         .criteria-flex {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 24px;
         }
 
         @media (max-width: 768px) {
@@ -186,16 +254,18 @@
 
         .criteria-box {
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 16px rgba(141, 122, 121, 0.04);
         }
 
         .criteria-box h4 {
-            margin: 0 0 12px 0;
+            margin: 0 0 15px 0;
             color: var(--primary);
-            font-size: 1.1rem;
+            font-size: 1.15rem;
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 8px;
         }
 
         .criteria-box ul {
@@ -206,37 +276,37 @@
         }
 
         .criteria-box li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         /* Digital Process Flow steps */
         .flow-step {
             display: flex;
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
             padding: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             align-items: flex-start;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 8px rgba(141, 122, 121, 0.02);
         }
 
         .step-badge {
-            background: var(--accent);
-            color: #ffffff;
-            min-width: 28px;
-            height: 28px;
-            line-height: 28px;
+            background: #e8dbfc; /* Soft purple */
+            color: #7048e8;
+            min-width: 32px;
+            height: 32px;
+            line-height: 32px;
             text-align: center;
             border-radius: 50%;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: bold;
-            margin-right: 16px;
+            margin-right: 18px;
         }
 
         .step-content h5 {
-            margin: 0 0 4px 0;
-            font-size: 1.05rem;
+            margin: 0 0 6px 0;
+            font-size: 1.1rem;
             color: var(--primary);
         }
 
@@ -250,48 +320,65 @@
 <body>
 
     <div class="container">
-        <div class="hero-banner">
-            <h1>Teacher-Creator Revenue Ecosystem</h1>
-            <p>Empowering Class One Faculty to Create, Scale, and Earn Secondary Income</p>
+        <!-- Logo Wrapper Card -->
+        <div class="logo-wrapper">
+            <img src="Classone logo.jpeg" alt="Class One Logo" onerror="this.onerror=null; this.src='https://placehold.co/400x120/fdfaf6/ff8fab?text=Class+One';">
         </div>
 
-        <div class="section-title">1. Content Framework & Structure</div>
+        <!-- Cozy Header Block -->
+        <div class="hero-banner">
+            <h1>Teacher-Creator Side Income Program</h1>
+            <p>Share Your Teaching Magic, Build Class One, and Earn Extra Every Month! ✨</p>
+        </div>
+
+        <!-- Section 1: Choose Your Video Style -->
+        <div class="section-title">🎥 1. Choose Your Video Style</div>
         <div class="grid-cards">
+            <!-- Pillar 1 -->
             <div class="card">
                 <div class="card-header-flex">
-                    <h3 class="card-title">Creative Shorts</h3>
+                    <h3 class="card-title">1. Creative Shorts</h3>
                     <span class="card-meta">30s – 1m</span>
                 </div>
-                <p style="margin: 0; font-size: 0.95rem; color: var(--text-muted);">
-                    Innovative visual break-downs of Chinese or English language syntax/sentence patterns. Built exclusively in **9:16 vertical orientation** targeting organic algorithmic reach and high brand awareness.
-                </p>
+                <ul>
+                    <li><strong>What is it?</strong> Quick, catchy, and creative mini-lessons teaching cool English or Chinese grammar rules or sentence structures!</li>
+                    <li><strong>Video Layout:</strong> Vertical screen (9:16 aspect ratio, standard phone format).</li>
+                    <li><strong>Best For:</strong> Reaching lots of new viewers on Class One social channels (TikTok, IG Reels, YT Shorts).</li>
+                </ul>
             </div>
+            <!-- Pillar 2 -->
             <div class="card">
                 <div class="card-header-flex">
-                    <h3 class="card-title">In-Class Clips</h3>
+                    <h3 class="card-title">2. In-Class Clips</h3>
                     <span class="card-meta">1m – 1.5m</span>
                 </div>
-                <p style="margin: 0; font-size: 0.95rem; color: var(--text-muted);">
-                    Curated captures focusing on organic class breakthroughs, highlights, and emotional interactions. Functions as immediate mid-funnel trust signals and social proof.
-                </p>
+                <ul>
+                    <li><strong>What is it?</strong> Short snippets of the absolute funniest, sweetest, or most brilliant "Aha!" moments from your actual live lessons.</li>
+                    <li><strong>What to highlight:</strong> Fun student reactions, lively games, or smart explanations that make students smile.</li>
+                    <li><strong>Best For:</strong> Showing potential new parents how fun and rewarding your real classes are!</li>
+                </ul>
             </div>
+            <!-- Pillar 3 -->
             <div class="card">
                 <div class="card-header-flex">
-                    <h3 class="card-title">Daily Vlogs</h3>
+                    <h3 class="card-title">3. Daily Vlogs</h3>
                     <span class="card-meta">2m – 5m</span>
                 </div>
-                <p style="margin: 0; font-size: 0.95rem; color: var(--text-muted);">
-                    Daily workflow timelines highlighting lesson preparation, interactive teaching, and individual lifestyles. Elevates employer transparency and team-to-student community bonding.
-                </p>
+                <ul>
+                    <li><strong>What is it?</strong> A delightful "Day in the life of a Class One teacher" video sharing your personal routine.</li>
+                    <li><strong>Fun Ideas:</strong> Show your cute home desk setup, how you prep lessons, how you unwind after teaching, or tell a heartwarming classroom story.</li>
+                    <li><strong>Best For:</strong> Letting students and parents connect with you on a personal level.</li>
+                </ul>
             </div>
         </div>
 
-        <div class="section-title">2. Dynamic Monthly Milestone Matrix</div>
+        <!-- Section 2: Pricing Table -->
+        <div class="section-title">💰 2. How Much You Can Earn</div>
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>Content Type</th>
+                        <th>Video Type</th>
                         <th>Tier 1 (1–5 Videos)</th>
                         <th>Tier 2 (6–15 Videos)</th>
                         <th>Tier 3 (16+ Videos)</th>
@@ -301,99 +388,102 @@
                     <tr>
                         <td><strong>Social Media Shorts</strong></td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 10.00</div><br>
-                            <div class="badge badge-raw">Raw: RM 5.00</div>
+                            <span class="badge badge-edited">Edited: RM 10.00</span><br>
+                            <span class="badge badge-raw">Raw: RM 5.00</span>
                         </td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 15.00</div><br>
-                            <div class="badge badge-raw">Raw: RM 7.50</div>
+                            <span class="badge badge-edited">Edited: RM 15.00</span><br>
+                            <span class="badge badge-raw">Raw: RM 7.50</span>
                         </td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 20.00</div><br>
-                            <div class="badge badge-disabled">Raw: Not Available</div>
+                            <span class="badge badge-edited">Edited: RM 20.00</span><br>
+                            <span class="badge badge-disabled">Raw: Not Available</span>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>In-Class Highlights</strong></td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 1.00</div><br>
-                            <div class="badge badge-raw">Raw: RM 0.50</div>
+                            <span class="badge badge-edited">Edited: RM 1.00</span><br>
+                            <span class="badge badge-raw">Raw: RM 0.50</span>
                         </td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 2.00</div><br>
-                            <div class="badge badge-raw">Raw: RM 1.00</div>
+                            <span class="badge badge-edited">Edited: RM 2.00</span><br>
+                            <span class="badge badge-raw">Raw: RM 1.00</span>
                         </td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 3.00</div><br>
-                            <div class="badge badge-disabled">Raw: Not Available</div>
+                            <span class="badge badge-edited">Edited: RM 3.00</span><br>
+                            <span class="badge badge-disabled">Raw: Not Available</span>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Daily Vlogs</strong></td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 5.00</div><br>
-                            <div class="badge badge-raw">Raw: RM 3.00</div>
+                            <span class="badge badge-edited">Edited: RM 5.00</span><br>
+                            <span class="badge badge-raw">Raw: RM 3.00</span>
                         </td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 6.50</div><br>
-                            <div class="badge badge-raw">Raw: RM 4.00</div>
+                            <span class="badge badge-edited">Edited: RM 6.50</span><br>
+                            <span class="badge badge-raw">Raw: RM 4.00</span>
                         </td>
                         <td>
-                            <div class="badge badge-edited">Edited: RM 8.00</div><br>
-                            <div class="badge badge-disabled">Raw: Not Available</div>
+                            <span class="badge badge-edited">Edited: RM 8.00</span><br>
+                            <span class="badge badge-disabled">Raw: Not Available</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
+        <!-- Safeguard Box -->
         <div class="safeguard-callout">
-            <h4>🛡️ System Operational Safety Valve</h4>
+            <h4>💡 Friendly Note on Raw Submissions</h4>
             <p>
-                To avoid editorial workload spikes inside our design core, <strong>Raw Footages are capped at a maximum threshold of 15 videos/month</strong> per teacher. To cross into the premium Tier 3 reward space, teachers must complete basic editing utilizing the free software CapCut.
+                Don't worry if you don't know how to edit! We accept raw footage, but please note that we can only receive <strong>a total of 30 Raw Videos monthly across all teachers combined</strong>. This is strictly on a <strong>first-come, first-served</strong> basis! Once the monthly limit of 30 total raw videos is reached, you will need to edit your videos yourself to have them approved.
             </p>
         </div>
 
-        <div class="section-title">3. Universal Asset Quality Standards</div>
+        <!-- Section 3: Criteria -->
+        <div class="section-title">⭐️ 3. Quick Video Checklist</div>
         <div class="criteria-flex">
             <div class="criteria-box">
-                <h4>Technical Standards</h4>
+                <h4>Technical Basics</h4>
                 <ul>
-                    <li><strong>Capture:</strong> Minimum native 1080p mobile sensor outputs.</li>
-                    <li><strong>Audio Profile:</strong> Isolated spoken voice. No high ambient background noises.</li>
-                    <li><strong>Lighting:</strong> Bright, window-facing or ring-lit clear subjects.</li>
+                    <li>🎥 <strong>Clear Video:</strong> Record on your phone using at least 1080p settings.</li>
+                    <li>🎤 <strong>Crisp Sound:</strong> Make sure your voice is easy to hear, free from fans or static noise.</li>
+                    <li>☀️ <strong>Warm Lighting:</strong> Sit facing a window or use a ring light. Try to avoid dark shadows.</li>
                 </ul>
             </div>
             <div class="criteria-box">
-                <h4>Content Integrity & Legal Compliance</h4>
+                <h4>Safety & Content Rules</h4>
                 <ul>
-                    <li><strong>Curriculum:</strong> 100% accurate sentence structures and translations.</li>
-                    <li><strong>Privacy Rule:</strong> Student identifiers, private faces, and family names must be cropped/blurred out completely.</li>
-                    <li><strong>Exclusivity:</strong> Zero competing brand assets or visible software watermarks.</li>
+                    <li>📚 <strong>100% Accurate:</strong> Make sure spelling, grammar, and sentence structures are correct.</li>
+                    <li>🔒 <strong>Student Privacy:</strong> Please blur or hide student names and faces in class clips.</li>
+                    <li>🌱 <strong>Keep it Exclusive:</strong> No visible branding of competing tutoring platforms.</li>
                 </ul>
             </div>
         </div>
 
-        <div class="section-title">4. Submission Lifecycle & Onboarding Workflow</div>
+        <!-- Section 4: Ready to Get Started? -->
+        <div class="section-title">🛠️ 4. Ready to Get Started?</div>
         <div class="flow-step">
             <div class="step-badge">1</div>
             <div class="step-content">
-                <h5>Resource Toolkit Distribution</h5>
-                <p>Provide educators with basic framework manuals covering angles, simple lighting positions, and direct CapCut instructional macros (Auto-Captions, Jump Cuts).</p>
+                <h5>Check Out Our Examples & Learn Online</h5>
+                <p>We’ll upload example videos so you can see the ideal final result and get a better idea of the editing style we’re looking for! If you’re interested in learning video editing, there are plenty of great free tutorials on YouTube and TikTok to help you get started.</p>
             </div>
         </div>
         <div class="flow-step">
             <div class="step-badge">2</div>
             <div class="step-content">
-                <h5>Standard Cloud Pipeline Submission</h5>
-                <p>Teachers load materials directly into scheduled shared storage hubs before the 25th calendar month system cutoff date.</p>
+                <h5>Shoot & Submit Your OA</h5>
+                <p>Record your video clips and submit them through our OA on Dingtalk system. We will upload the OA guidelines right here so you can easily understand the flow of getting your content approved!</p>
             </div>
         </div>
         <div class="flow-step">
             <div class="step-badge">3</div>
             <div class="step-content">
-                <h5>Audit Integration & Pay-Out Pipeline</h5>
-                <p>The marketing team reviews the content pipeline against criteria matrix points, checks cumulative thresholds, and issues payouts along with monthly teacher salaries.</p>
+                <h5>Get Evaluated & Paid</h5>
+                <p>Our marketing team will review your submitted clips. Approved videos will be counted according to your monthly tier. To receive your extra payout, simply attach the approved video OA link when submitting your monthly incentive claim. The payout will then be included together with your normal paycheck!</p>
             </div>
         </div>
     </div>
